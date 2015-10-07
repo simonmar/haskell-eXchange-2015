@@ -9,6 +9,7 @@ module BlogDataSource
   , getPostIds
   , getPostContent
   , initDataSource
+  , BlogRequest(..)
   , BlogDBException(..)
   ) where
 
@@ -53,13 +54,13 @@ instance Hashable (BlogRequest a) where
 -- -----------------------------------------------------------------------------
 -- Requests
 
-getPostIds     :: GenHaxl u [PostId]
-getPostIds     = dataFetch FetchPosts
+getPostIds :: GenHaxl u [PostId]
+getPostIds = dataFetch FetchPosts
 
 getPostContent :: PostId -> GenHaxl u PostContent
 getPostContent = dataFetch . FetchPostContent
 
--- ... more operations
+-- more operations ...
 
 
 -- -----------------------------------------------------------------------------
@@ -97,6 +98,7 @@ emptyBatches = ([],[])
 collect :: BlockedFetch BlogRequest -> Batches -> Batches
 collect (BlockedFetch FetchPosts v) (as,bs) = (v:as,bs)
 collect (BlockedFetch (FetchPostContent x) v) (as,bs) = (as,(x,v):bs)
+
 
 -- -----------------------------------------------------------------------------
 -- Fetch data for each batch

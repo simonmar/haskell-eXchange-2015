@@ -6,20 +6,30 @@ import Data.Typeable
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Reader
 
-type PostId = Int
-type PostContent = String
+-- -----------------------------------------------------------------------------
+-- A monad
 
 type Blog a = ReaderT SQLiteHandle IO a
 
-runBlog :: Blog a -> IO a
-runBlog m = do
+run :: Blog a -> IO a
+run m = do
   db <- openConnection "blog.sqlite"
   runReaderT m db
 
+
+-- -----------------------------------------------------------------------------
+-- An API
+
+type PostId = Int
+type PostContent = String
+
 getPostIds     :: Blog [PostId]
 getPostContent :: PostId -> Blog PostContent
--- ... more operations
+-- more operations...
 
+
+-- -----------------------------------------------------------------------------
+-- Implementation
 
 sql :: String -> Blog (Either String [[Row Value]])
 sql query = do

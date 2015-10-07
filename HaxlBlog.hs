@@ -5,27 +5,21 @@
  #-}
 
 module HaxlBlog (
-    -- * User API
     PostId, PostContent,
     getPostIds, getPostContent,
-
-    -- * Data source API
-    runBlog,
+    Haxl,
+    run
   ) where
 
 
 import BlogDataSource
-
 import Haxl.Core
-
--- -----------------------------------------------------------------------------
--- Requests
 
 type Haxl a = GenHaxl () a
 
-
-runBlog :: Haxl a -> IO a
-runBlog h = do
+run :: Haxl a -> IO a
+run h = do
   db <- initDataSource
   env <- initEnv (stateSet db stateEmpty) ()
   runHaxl env h
+
